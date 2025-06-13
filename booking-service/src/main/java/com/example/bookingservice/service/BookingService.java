@@ -42,4 +42,19 @@ public class BookingService {
         booking.setStatus(Booking.BookingStatus.CANCELLED);
         bookingRepository.save(booking);
     }
+
+    public void finish(Long bookingId, Long userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (!booking.getUserId().equals(userId)) {
+            throw new RuntimeException("Access denied: this booking does not belong to you");
+        }
+
+        if (booking.getStatus() != Booking.BookingStatus.CANCELLED) {
+            booking.setStatus(Booking.BookingStatus.FINISHED); // або CONFIRMED → FINISHED
+            bookingRepository.save(booking);
+        }
+    }
+
 }

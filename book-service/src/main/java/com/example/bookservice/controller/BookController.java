@@ -7,10 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -20,27 +16,42 @@ public class BookController {
 
     @GetMapping
     public List<Book> getAll() {
-        return bookService.findAll();
+        List<Book> books = bookService.findAll();
+        System.out.println("📘 [GET /books] Кількість знайдених книг: " + books.size());
+        for (Book book : books) {
+            System.out.println("📗 - " + book.getTitle() + " | " + book.getAuthor());
+        }
+        return books;
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "book-service працює";
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.findById(id));
+        System.out.println("🔍 [GET /books/" + id + "] Запит книги за ID");
+        Book book = bookService.findById(id);
+        System.out.println("📙 Знайдено: " + book.getTitle() + " | " + book.getAuthor());
+        return ResponseEntity.ok(book);
     }
 
     @PostMapping("/admin")
     public Book create(@RequestBody Book book) {
+        System.out.println("🆕 [POST /books/admin] Створення нової книги: " + book.getTitle());
         return bookService.save(book);
     }
 
     @PutMapping("/admin/{id}")
     public Book update(@PathVariable Long id, @RequestBody Book book) {
+        System.out.println("✏️ [PUT /books/admin/" + id + "] Оновлення книги: " + book.getTitle());
         return bookService.update(id, book);
     }
 
     @DeleteMapping("/admin/{id}")
     public void delete(@PathVariable Long id) {
+        System.out.println("🗑️ [DELETE /books/admin/" + id + "] Видалення книги");
         bookService.delete(id);
     }
-
 }

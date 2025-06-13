@@ -1,0 +1,81 @@
+.home-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 2rem;
+  color: #f6cd9c;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #f6b162;
+  }
+
+  .empty-message {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    color: #aaa;
+  }
+
+  .book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .book-card {
+    background-color: #1e1e2f;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      margin: 0;
+      color: #f6cd9c;
+    }
+
+    .author {
+      font-style: italic;
+      color: #f6b162;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    .status {
+      font-weight: bold;
+    }
+
+    .available {
+      color: #00e676;
+    }
+
+    .not-available {
+      color: #ff5252;
+    }
+
+    &.unavailable {
+      opacity: 0.7;
+    }
+
+    button {
+      align-self: flex-start;
+      background-color: #e68617;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #f6b162;
+    }
+  }
+}

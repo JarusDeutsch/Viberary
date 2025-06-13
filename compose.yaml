@@ -103,6 +103,17 @@ services:
     networks:
       - viberary-net
 
+  viberary-frontend:
+    build:
+      context: ./viberary-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - gateway
+    networks:
+      - viberary-net
+
 volumes:
   mysql-data:
 

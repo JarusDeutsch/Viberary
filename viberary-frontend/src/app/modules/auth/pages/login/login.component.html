@@ -1,0 +1,25 @@
+<div class="auth-container">
+  <h2>Вхід до Viberary</h2>
+
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="auth-form">
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" required [(ngModel)]="email" name="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Пароль</mat-label>
+      <input matInput type="password" required [(ngModel)]="password" name="password" />
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" class="submit-button" type="submit">Увійти</button>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+
+  <p class="link-text">
+    Ще не маєте акаунта? <a routerLink="/register">Зареєструватися</a>
+  </p>
+</div>

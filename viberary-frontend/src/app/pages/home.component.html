@@ -1,0 +1,24 @@
+<div class="home-container">
+  <h1>📚 Каталог Книг</h1>
+
+  <div *ngIf="books.length === 0" class="empty-message">
+    📭 Книг поки немає
+  </div>
+
+  <div class="book-grid">
+    <div *ngFor="let book of books" class="book-card" [class.unavailable]="!book.available">
+      <h2>{{ book.title }}</h2>
+      <p class="author">✍️ {{ book.author }}</p>
+      <p class="description">{{ book.description }}</p>
+      <p class="status" [ngClass]="{ 'available': book.available, 'not-available': !book.available }">
+        {{ book.available ? '🟢 Доступна' : '🔴 Недоступна' }}
+      </p>
+
+      <button mat-raised-button color="primary"
+              [disabled]="!book.available"
+              (click)="bookNow(book.id)">
+        📖 Забронювати
+      </button>
+    </div>
+  </div>
+</div>

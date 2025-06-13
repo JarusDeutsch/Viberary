@@ -36,4 +36,14 @@ public class BookingController {
         bookingService.cancel(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/finish")
+    public ResponseEntity<Void> finishBooking(@PathVariable Long id,
+                                              @org.springframework.security.core.annotation.AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = Long.parseLong(jwt.getSubject());
+        bookingService.finish(id, userId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
