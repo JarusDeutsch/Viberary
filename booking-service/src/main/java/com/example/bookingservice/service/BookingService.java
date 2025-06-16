@@ -1,5 +1,6 @@
 package com.example.bookingservice.service;
 
+import com.example.bookingservice.dto.BookingResponse;
 import com.example.bookingservice.exception.BookUnavailableException;
 import com.example.bookingservice.model.Booking;
 import com.example.bookingservice.repository.BookingRepository;
@@ -30,7 +31,18 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
-
+    public List<BookingResponse> getUserBookingResponses(Long userId) {
+        return bookingRepository.findByUserId(userId)
+                .stream()
+                .map(booking -> BookingResponse.builder()
+                        .id(booking.getId())
+                        .bookId(booking.getBookId())
+                        .startDate(booking.getStartDate())
+                        .endDate(booking.getEndDate())
+                        .status(booking.getStatus().name())
+                        .build())
+                .toList();
+    }
 
     public List<Booking> getUserBookings(Long userId) {
         return bookingRepository.findByUserId(userId);

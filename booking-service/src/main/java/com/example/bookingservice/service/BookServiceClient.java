@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class BookServiceClient {
 
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClient;
 
-    @Value("${services.book-service.url:http://localhost:8082}")
+    @Value("${services.book-service.url:http://book-service:8082}")
     private String bookServiceUrl;
 
     public boolean isBookAvailable(Long bookId, LocalDate start, LocalDate end) {
-        BookAvailabilityResponse response = webClientBuilder.build()
+        BookAvailabilityResponse response = webClient
                 .get()
                 .uri(bookServiceUrl + "/internal/books/{bookId}/available?start={start}&end={end}",
                         bookId, start, end)
@@ -28,5 +28,4 @@ public class BookServiceClient {
 
         return response != null && response.isAvailable();
     }
-
 }

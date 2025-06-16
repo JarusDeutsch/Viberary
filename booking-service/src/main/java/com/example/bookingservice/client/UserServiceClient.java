@@ -1,35 +1,39 @@
 package com.example.bookingservice.client;
 
 import com.example.bookingservice.dto.UserResponse;
+import com.example.bookingservice.service.TokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceClient {
 
-    private final RestTemplate restTemplate;
-
-    @Value("${user-service.url:http://user-service:8081}")
-    private String userServiceUrl;
-
-    @Value("${auth.internal-token:}")
-    private String internalToken;
+    private final WebClient webClient;
+    private final TokenService tokenService;
 
     public UserResponse getUserByEmail(String email) {
-        String url = userServiceUrl + "/api/users/by-email?email=" + email;
+        String token = tokenService.getAccessToken(); // 🔑 Отримуємо токен
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(internalToken);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<UserResponse> response = restTemplate.exchange(
-                url, HttpMethod.GET, entity, UserResponse.class
-        );
-
-        return response.getBody();
+        try {
+            return webClient
+                    .get()
+                    .uri("http://user-service:8081/api/users/by-email?email={email}", email)
+                    .headers(headers -> headers.setBearerAuth(token)) // ✅ Додаємо токен
+                    .retrieve()
+                    .bodyToMono(UserResponse.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            log.error("❌ Помилка запиту до user-service: статус={}, причина={}, тіло={}",
+                    e.getStatusCode(), e.getMessage(), e.getResponseBodyAsString());
+            return null;
+        } catch (Exception e) {
+            log.error("❌ Несподівана помилка при виклику user-service", e);
+            return null;
+        }
     }
 }

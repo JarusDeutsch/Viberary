@@ -44,12 +44,28 @@ public class AuthorizationServerConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults()); // Включити OpenID Connect Metadata
+
+
+
         return http.build();
     }
 
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
+        // 🔹 booking-service для мікросервісної взаємодії
+        RegisteredClient bookingService = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("booking-service")
+                .clientSecret("{noop}booking-secret")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope("ROLE_USER")
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenTimeToLive(Duration.ofHours(1))
+                        .build())
+                .build();
+
+        // 🔹 інший клієнт для frontend тощо
+        RegisteredClient viberaryClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("viberary-client")
                 .clientSecret("{noop}secret")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -63,8 +79,9 @@ public class AuthorizationServerConfig {
                         .build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(client);
+        return new InMemoryRegisteredClientRepository(bookingService, viberaryClient);
     }
+
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {

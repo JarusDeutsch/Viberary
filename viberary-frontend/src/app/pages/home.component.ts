@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.bookService.getAllBooks().subscribe({
-      next: (data) => this.books = data,
-      error: (err) => console.error('❌ Error loading books', err)
+      next: (data: Book[]) => this.books = data,
+      error: (err: any) => console.error('❌ Error loading books', err)
     });
   }
 
@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit {
 
     this.bookingService.createReservation(reservation).subscribe({
       next: () => alert('✅ Заброньовано успішно'),
-      error: (err) => alert('❌ Помилка бронювання: ' + err.message)
+      error: (err: any) => alert('❌ Помилка бронювання: ' + err.message)
     });
+
   }
 }

@@ -1,0 +1,21 @@
+<h2>Мої бронювання</h2>
+
+<div *ngIf="bookings.length === 0">
+  У вас немає бронювань.
+</div>
+
+<div *ngFor="let booking of bookings" class="booking-card">
+  <p><strong>Книга ID:</strong> {{ booking.bookId }}</p>
+  <p><strong>Період:</strong> {{ booking.startDate }} – {{ booking.endDate }}</p>
+  <p><strong>Статус:</strong>
+    <span [ngClass]="{
+      'text-success': booking.status === 'FINISHED',
+      'text-warning': booking.status === 'PENDING',
+      'text-danger': booking.status === 'CANCELLED'
+    }">{{ booking.status }}</span>
+  </p>
+
+  <button *ngIf="booking.status === 'PENDING'" (click)="markAsRead(booking.id)" class="btn btn-sm btn-outline-primary">
+    Позначити як прочитано
+  </button>
+</div>
